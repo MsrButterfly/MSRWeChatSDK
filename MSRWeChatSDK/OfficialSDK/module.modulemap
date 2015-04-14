@@ -1,0 +1,4 @@
+module WeChatSDK {
+    umbrella header "WeChatSDK.h"
+    use UIKit
+}
