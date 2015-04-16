@@ -37,95 +37,108 @@ import WeChatSDK
     case Ad = 0
 }
 
-@objc public class MSRWeChatManager: NSObject, WXApiDelegate {
+@objc public class MSRWeChatManager: NSObject {
     
     public static let defaultManager = MSRWeChatManager()
     
-    public func shareText(text: String, toScene scene: MSRWeChatScene) -> Bool {
+    public func sendText(text: String, toScene scene: MSRWeChatScene, success: (() -> Void)?, failure: (() -> Void)?) -> Bool {
         let request = SendMessageToWXReq()
         request.text = text
         request.bText = true
         request.scene = Int32(scene.rawValue)
-        return WXApi.sendReq(request)
+        let result = WXApi.sendReq(request)
+        if result {
+            success?()
+        } else {
+            failure?()
+        }
+        return result
     }
     
-    public func shareImage(image: UIImage, toScene scene: MSRWeChatScene, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?) -> Bool {
+    public func sendImage(image: UIImage, toScene scene: MSRWeChatScene, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, success: (() -> Void)?, failure: (() -> Void)?) -> Bool {
         let object = WXImageObject()
         object.imageData = UIImageJPEGRepresentation(image, 1)
-        return _shareObject(object, toScene: scene, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action)
+        return _sendObject(object, toScene: scene, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, success: success, failure: failure)
     }
     
-    public func shareImageWithData(data: NSData, toScene scene: MSRWeChatScene, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?) -> Bool {
+    public func sendImageWithData(data: NSData, toScene scene: MSRWeChatScene, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, success: (() -> Void)?, failure: (() -> Void)?) -> Bool {
         let object = WXImageObject()
         object.imageData = data
-        return _shareObject(object, toScene: scene, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action)
+        return _sendObject(object, toScene: scene, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, success: success, failure: failure)
     }
     
-    public func shareLink(link: NSURL, toScene scene: MSRWeChatScene, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?) -> Bool {
+    public func sendLink(link: NSURL, toScene scene: MSRWeChatScene, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, success: (() -> Void)?, failure: (() -> Void)?) -> Bool {
         let object = WXWebpageObject()
         object.webpageUrl = link.absoluteString
-        return _shareObject(object, toScene: scene, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action)
+        return _sendObject(object, toScene: scene, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, success: success, failure: failure)
     }
     
-    public func shareMusicWithDataURL(dataURL: NSURL, toScene scene: MSRWeChatScene, lowBandDataURL: NSURL?, webpageURL: NSURL?, lowBandWebPageURL: NSURL?, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?) -> Bool {
+    public func sendMusicWithDataURL(dataURL: NSURL, toScene scene: MSRWeChatScene, lowBandDataURL: NSURL?, webpageURL: NSURL?, lowBandWebPageURL: NSURL?, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, success: (() -> Void)?, failure: (() -> Void)?) -> Bool {
         let object = WXMusicObject()
         object.musicUrl = webpageURL?.absoluteString
         object.musicDataUrl = dataURL.absoluteString
         object.musicLowBandDataUrl = lowBandDataURL?.absoluteString
         object.musicLowBandUrl = lowBandWebPageURL?.absoluteString
-        return _shareObject(object, toScene: scene, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action)
+        return _sendObject(object, toScene: scene, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, success: success, failure: failure)
     }
     
-    public func shareVideoWithURL(URL: NSURL, toScene scene: MSRWeChatScene, lowBandVideoURL: NSURL?, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?) -> Bool {
+    public func sendVideoWithURL(url: NSURL, toScene scene: MSRWeChatScene, lowBandVideoURL: NSURL?, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, success: (() -> Void)?, failure: (() -> Void)?) -> Bool {
         let object = WXVideoObject()
-        object.videoUrl = URL.absoluteString
+        object.videoUrl = url.absoluteString
         object.videoLowBandUrl = lowBandVideoURL?.absoluteString
-        return _shareObject(object, toScene: scene, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action)
+        return _sendObject(object, toScene: scene, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, success: success, failure: failure)
     }
     
-    public func shareWebpageWithURL(URL: NSURL, toScene scene: MSRWeChatScene, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?) -> Bool {
+    public func sendWebpageWithURL(url: NSURL, toScene scene: MSRWeChatScene, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, success: (() -> Void)?, failure: (() -> Void)?) -> Bool {
         let object = WXWebpageObject()
-        object.webpageUrl = URL.absoluteString
-        return _shareObject(object, toScene: scene, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action)
+        object.webpageUrl = url.absoluteString
+        return _sendObject(object, toScene: scene, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, success: success, failure: failure)
     }
     
-    public func shareApplicationDefinedInformations(informations: String, toScene scene: MSRWeChatScene, appURL: NSURL?, fileData: NSData?, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?) -> Bool {
+    public func sendApplicationDefinedInformations(informations: String, toScene scene: MSRWeChatScene, appURL: NSURL?, fileData: NSData?, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, success: (() -> Void)?, failure: (() -> Void)?) -> Bool {
         let object = WXAppExtendObject()
         object.url = appURL?.absoluteString
         object.extInfo = informations
         object.fileData = fileData
-        return _shareObject(object, toScene: scene, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action)
+        return _sendObject(object, toScene: scene, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, success: success, failure: failure)
     }
     
-    public func shareFileWithData(data: NSData, toScene scene: MSRWeChatScene, extensionName: String, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?) -> Bool {
+    public func sendFileWithData(data: NSData, toScene scene: MSRWeChatScene, extensionName: String, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, success: (() -> Void)?, failure: (() -> Void)?) -> Bool {
         let object = WXFileObject()
         object.fileData = data
         object.fileExtension = extensionName
-        return _shareObject(object, toScene: scene, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action)
+        return _sendObject(object, toScene: scene, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, success: success, failure: failure)
     }
     
-    public func shareEmoticonWithData(data: NSData, toScene scene: MSRWeChatScene, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?) -> Bool {
+    public func sendEmoticonWithData(data: NSData, toScene scene: MSRWeChatScene, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, success: (() -> Void)?, failure: (() -> Void)?) -> Bool {
         let object = WXEmoticonObject()
         object.emoticonData = data
-        return _shareObject(object, toScene: scene, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action)
+        return _sendObject(object, toScene: scene, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, success: success, failure: failure)
     }
     
-    public func handleOpenURL(URL: NSURL) -> Bool {
-        return WXApi.handleOpenURL(URL, delegate: _MSRWeChatManager.defaultManager)
+    public func handleOpenURL(url: NSURL, withDelegate delegate: MSRWeChatManagerDelegate) -> Bool {
+        _MSRWeChatManager.defaultManager.delegate = delegate
+        return WXApi.handleOpenURL(url, delegate: _MSRWeChatManager.defaultManager)
     }
     
-    private func _shareObject(object: AnyObject, toScene scene: MSRWeChatScene, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?) -> Bool {
-        let message = WXMediaMessage()
-        message.title = title
-        message.description = description
-        message.setThumbImage(thumbnailImage)
-        message.mediaObject = object
-        message.mediaTagName = tagName
-        let request = SendMessageToWXReq()
-        request.bText = false
-        request.message = message
-        request.scene = Int32(scene.rawValue)
-       return WXApi.sendReq(request)
+    public func weChatIsInstalled() -> Bool {
+        return WXApi.isWXAppInstalled()
+    }
+    
+    public func weChatSupportsOpenAPI() -> Bool {
+        return WXApi.isWXAppSupportApi()
+    }
+    
+    public func weChatInstallURL() -> String? {
+        return WXApi.getWXAppInstallUrl()
+    }
+    
+    public func weChatAPIVersion() -> String? {
+        return WXApi.getApiVersion()
+    }
+    
+    public func launchWeChat() -> Bool {
+        return WXApi.openWXApp()
     }
     
     public func registerAppWithID(ID: String) -> Bool {
@@ -136,11 +149,45 @@ import WeChatSDK
         return WXApi.registerApp(ID, withDescription: description)
     }
     
+    private func _sendObject(object: AnyObject, toScene scene: MSRWeChatScene, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, success: (() -> Void)?, failure: (() -> Void)?) -> Bool {
+        let message = WXMediaMessage()
+        message.title = title
+        message.description = description
+        message.setThumbImage(thumbnailImage)
+        message.mediaObject = object
+        message.mediaTagName = tagName
+        let request = SendMessageToWXReq()
+        request.bText = false
+        request.message = message
+        request.scene = Int32(scene.rawValue)
+        let result = WXApi.sendReq(request)
+        if result {
+            success?()
+        } else {
+            failure?()
+        }
+        return result
+    }
+
+}
+
+@objc public protocol MSRWeChatManagerDelegate {
+    optional func msr_didReceiveMessageSendingResponseFromWeChat(errorCode: MSRWeChatErrorCode, errorString: String?)
+    optional func msr_didReceiveAuthorizationResponseFromWeChat(errorCode: MSRWeChatErrorCode, errorString: String?, token: String?, mark: String?)
+    optional func msr_didReceiveCardsAddingResponseFromWeChat(errorCode: MSRWeChatErrorCode, errorStrong: String?, cards: [MSRWeChatCard]?)
+}
+
+@objc public class MSRWeChatCard: NSObject {
+    var identifier: String = ""
+    var extraMessage: String = ""
+    var added: Bool = false
 }
 
 @objc class _MSRWeChatManager: NSObject, WXApiDelegate {
     
-    static let defaultManager = _MSRWeChatManager()
+    static var defaultManager = _MSRWeChatManager()
+    
+    var delegate: MSRWeChatManagerDelegate?
     
     func onReq(request: BaseReq!) {
         print("ON REQUEST ")
@@ -161,21 +208,32 @@ import WeChatSDK
     }
     
     func onResp(response: BaseResp!) {
-        print("ON RESPONSE ")
-        println(response)
+        let errorCode = MSRWeChatErrorCode(rawValue: Int(response.errCode))!
+        let errorString = response.errStr
         switch response {
         case let response as SendMessageToWXResp:
-            // 发送媒体消息结果
+            delegate?.msr_didReceiveMessageSendingResponseFromWeChat?(errorCode, errorString: errorString)
             break
         case let response as SendAuthResp:
-            // Auth结果
+            delegate?.msr_didReceiveAuthorizationResponseFromWeChat?(errorCode, errorString: errorString, token: response.code, mark: response.state)
             break
         case let response as AddCardToWXCardPackageResp:
+            var cards: [MSRWeChatCard]?
+            if errorCode == .Success {
+                cards = []
+                for item in response.cardAry as! [WXCardItem] {
+                    let c = MSRWeChatCard()
+                    c.identifier = item.cardId
+                    c.extraMessage = item.extMsg
+                    c.added = item.cardState == 1
+                    cards!.append(c)
+                }
+            }
+            delegate?.msr_didReceiveCardsAddingResponseFromWeChat?(errorCode, errorStrong: errorString, cards: cards)
             break
         default:
             break
         }
     }
-
     
 }
