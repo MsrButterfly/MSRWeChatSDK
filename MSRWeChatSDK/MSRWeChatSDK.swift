@@ -41,7 +41,7 @@ import WeChatSDK
     
     public static let defaultManager = MSRWeChatManager()
     
-    public func sendText(text: String, toScene scene: MSRWeChatScene, success: (() -> Void)?, failure: (() -> Void)?) -> Bool {
+    public func sendRequestToScene(scene: MSRWeChatScene, text: String, success: (() -> Void)?, failure: (() -> Void)?) -> Bool {
         let request = SendMessageToWXReq()
         request.text = text
         request.bText = true
@@ -55,65 +55,59 @@ import WeChatSDK
         return result
     }
     
-    public func sendImage(image: UIImage, toScene scene: MSRWeChatScene, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, success: (() -> Void)?, failure: (() -> Void)?) -> Bool {
+    public func sendRequestToScene(scene: MSRWeChatScene, image: UIImage, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, success: (() -> Void)?, failure: (() -> Void)?) -> Bool {
         let object = WXImageObject()
         object.imageData = UIImageJPEGRepresentation(image, 1)
-        return _sendObject(object, toScene: scene, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, success: success, failure: failure)
+        return _sendRequestToScene(scene, object: object, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, success: success, failure: failure)
     }
     
-    public func sendImageWithData(data: NSData, toScene scene: MSRWeChatScene, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, success: (() -> Void)?, failure: (() -> Void)?) -> Bool {
+    public func sendRequestToScene(scene: MSRWeChatScene, imageData: NSData, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, success: (() -> Void)?, failure: (() -> Void)?) -> Bool {
         let object = WXImageObject()
-        object.imageData = data
-        return _sendObject(object, toScene: scene, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, success: success, failure: failure)
+        object.imageData = imageData
+        return _sendRequestToScene(scene, object: object, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, success: success, failure: failure)
     }
     
-    public func sendLink(link: NSURL, toScene scene: MSRWeChatScene, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, success: (() -> Void)?, failure: (() -> Void)?) -> Bool {
+    public func sendRequestToScene(scene: MSRWeChatScene, webpageURL: NSURL, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, success: (() -> Void)?, failure: (() -> Void)?) -> Bool {
         let object = WXWebpageObject()
-        object.webpageUrl = link.absoluteString
-        return _sendObject(object, toScene: scene, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, success: success, failure: failure)
+        object.webpageUrl = webpageURL.absoluteString
+        return _sendRequestToScene(scene, object: object, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, success: success, failure: failure)
     }
     
-    public func sendMusicWithDataURL(dataURL: NSURL, toScene scene: MSRWeChatScene, lowBandDataURL: NSURL?, webpageURL: NSURL?, lowBandWebPageURL: NSURL?, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, success: (() -> Void)?, failure: (() -> Void)?) -> Bool {
+    public func sendRequestToScene(scene: MSRWeChatScene, musicDataURL: NSURL, lowBandMusicDataURL: NSURL?, musicWebpageURL: NSURL?, lowBandMusicWebPageURL: NSURL?, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, success: (() -> Void)?, failure: (() -> Void)?) -> Bool {
         let object = WXMusicObject()
-        object.musicUrl = webpageURL?.absoluteString
-        object.musicDataUrl = dataURL.absoluteString
-        object.musicLowBandDataUrl = lowBandDataURL?.absoluteString
-        object.musicLowBandUrl = lowBandWebPageURL?.absoluteString
-        return _sendObject(object, toScene: scene, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, success: success, failure: failure)
+        object.musicUrl = musicWebpageURL?.absoluteString
+        object.musicDataUrl = musicDataURL.absoluteString
+        object.musicLowBandDataUrl = lowBandMusicDataURL?.absoluteString
+        object.musicLowBandUrl = lowBandMusicWebPageURL?.absoluteString
+        return _sendRequestToScene(scene, object: object, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, success: success, failure: failure)
     }
     
-    public func sendVideoWithURL(url: NSURL, toScene scene: MSRWeChatScene, lowBandVideoURL: NSURL?, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, success: (() -> Void)?, failure: (() -> Void)?) -> Bool {
+    public func sendRequestToScene(scene: MSRWeChatScene, videoURL: NSURL, lowBandVideoURL: NSURL?, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, success: (() -> Void)?, failure: (() -> Void)?) -> Bool {
         let object = WXVideoObject()
-        object.videoUrl = url.absoluteString
+        object.videoUrl = videoURL.absoluteString
         object.videoLowBandUrl = lowBandVideoURL?.absoluteString
-        return _sendObject(object, toScene: scene, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, success: success, failure: failure)
+        return _sendRequestToScene(scene, object: object, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, success: success, failure: failure)
     }
     
-    public func sendWebpageWithURL(url: NSURL, toScene scene: MSRWeChatScene, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, success: (() -> Void)?, failure: (() -> Void)?) -> Bool {
-        let object = WXWebpageObject()
-        object.webpageUrl = url.absoluteString
-        return _sendObject(object, toScene: scene, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, success: success, failure: failure)
-    }
-    
-    public func sendApplicationDefinedInformations(informations: String, toScene scene: MSRWeChatScene, appURL: NSURL?, fileData: NSData?, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, success: (() -> Void)?, failure: (() -> Void)?) -> Bool {
+    public func sendRequestToScene(scene: MSRWeChatScene, applicationDefinedInformations: String, applicationDownloadURL: NSURL?, fileData: NSData?, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, success: (() -> Void)?, failure: (() -> Void)?) -> Bool {
         let object = WXAppExtendObject()
-        object.url = appURL?.absoluteString
-        object.extInfo = informations
+        object.url = applicationDownloadURL?.absoluteString
+        object.extInfo = applicationDefinedInformations
         object.fileData = fileData
-        return _sendObject(object, toScene: scene, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, success: success, failure: failure)
+        return _sendRequestToScene(scene, object: object, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, success: success, failure: failure)
     }
     
-    public func sendFileWithData(data: NSData, toScene scene: MSRWeChatScene, extensionName: String, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, success: (() -> Void)?, failure: (() -> Void)?) -> Bool {
+    public func sendRequestToScene(scene: MSRWeChatScene, fileData: NSData, fileExtensionName: String, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, success: (() -> Void)?, failure: (() -> Void)?) -> Bool {
         let object = WXFileObject()
-        object.fileData = data
-        object.fileExtension = extensionName
-        return _sendObject(object, toScene: scene, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, success: success, failure: failure)
+        object.fileData = fileData
+        object.fileExtension = fileExtensionName
+        return _sendRequestToScene(scene, object: object, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, success: success, failure: failure)
     }
     
-    public func sendEmoticonWithData(data: NSData, toScene scene: MSRWeChatScene, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, success: (() -> Void)?, failure: (() -> Void)?) -> Bool {
+    public func sendRequestToScene(scene: MSRWeChatScene, emoticonData: NSData, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, success: (() -> Void)?, failure: (() -> Void)?) -> Bool {
         let object = WXEmoticonObject()
-        object.emoticonData = data
-        return _sendObject(object, toScene: scene, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, success: success, failure: failure)
+        object.emoticonData = emoticonData
+        return _sendRequestToScene(scene, object: object, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, success: success, failure: failure)
     }
     
     public func handleOpenURL(url: NSURL, withDelegate delegate: MSRWeChatManagerDelegate) -> Bool {
@@ -149,7 +143,7 @@ import WeChatSDK
         return WXApi.registerApp(ID, withDescription: description)
     }
     
-    private func _sendObject(object: AnyObject, toScene scene: MSRWeChatScene, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, success: (() -> Void)?, failure: (() -> Void)?) -> Bool {
+    private func _sendRequestToScene(scene: MSRWeChatScene, object: AnyObject, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, success: (() -> Void)?, failure: (() -> Void)?) -> Bool {
         let message = WXMediaMessage()
         message.title = title
         message.description = description
