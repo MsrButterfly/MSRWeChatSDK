@@ -30,20 +30,6 @@
 			remoteGlobalIDString = 9507CE161ADCEEA7001E1D33;
 			remoteInfo = MSRWeChatSDK;
 		};
-		9554D5D01ADD7B8B00C94061 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9554D5CB1ADD7B8A00C94061 /* WeCenterMobile.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9554D5A61ADD7B8A00C94061;
-			remoteInfo = WeCenterMobile;
-		};
-		9554D5D21ADD7B8B00C94061 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9554D5CB1ADD7B8A00C94061 /* WeCenterMobile.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9554D5BB1ADD7B8A00C94061;
-			remoteInfo = WeCenterMobileTests;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -67,7 +53,6 @@
 		9554D5541ADD2E9B00C94061 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		9554D5561ADD2EA400C94061 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		9554D5581ADD2EAD00C94061 /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
-		9554D5CB1ADD7B8A00C94061 /* WeCenterMobile.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = WeCenterMobile.xcodeproj; path = WeCenterMobile/WeCenterMobile.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,7 +84,6 @@
 			children = (
 				9507CE191ADCEEA7001E1D33 /* MSRWeChatSDK */,
 				9507CE261ADCEEA8001E1D33 /* MSRWeChatSDKTests */,
-				9554D5CB1ADD7B8A00C94061 /* WeCenterMobile.xcodeproj */,
 				9507CE181ADCEEA7001E1D33 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -175,15 +159,6 @@
 				9554D5561ADD2EA400C94061 /* libz.dylib */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		9554D5CC1ADD7B8A00C94061 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				9554D5D11ADD7B8B00C94061 /* WeCenterMobile.app */,
-				9554D5D31ADD7B8B00C94061 /* WeCenterMobileTests.xctest */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -265,12 +240,6 @@
 			mainGroup = 9507CE0D1ADCEEA7001E1D33;
 			productRefGroup = 9507CE181ADCEEA7001E1D33 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 9554D5CC1ADD7B8A00C94061 /* Products */;
-					ProjectRef = 9554D5CB1ADD7B8A00C94061 /* WeCenterMobile.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				9507CE161ADCEEA7001E1D33 /* MSRWeChatSDK */,
@@ -278,23 +247,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		9554D5D11ADD7B8B00C94061 /* WeCenterMobile.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = WeCenterMobile.app;
-			remoteRef = 9554D5D01ADD7B8B00C94061 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9554D5D31ADD7B8B00C94061 /* WeCenterMobileTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = WeCenterMobileTests.xctest;
-			remoteRef = 9554D5D21ADD7B8B00C94061 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		9507CE151ADCEEA7001E1D33 /* Resources */ = {

@@ -55,11 +55,11 @@ extension MSRWeChatScope: Hashable {
     }
     
     public class func sendRequestToScene(scene: MSRWeChatScene, image: UIImage, completion: ((Bool) -> Void)?) {
-        return sendRequestToScene(scene, image: image, title: nil, description: nil, thumbnailImage: nil, completion: completion)
+        sendRequestToScene(scene, image: image, title: nil, description: nil, thumbnailImage: nil, completion: completion)
     }
     
     public class func sendRequestToScene(scene: MSRWeChatScene, image: UIImage, title: String?, description: String?, thumbnailImage: UIImage?, completion: ((Bool) -> Void)?) {
-        return sendRequestToScene(scene, image: image, title: title, description: description, thumbnailImage: thumbnailImage, tagName: nil, extraMessage: nil, action: nil, completion: completion)
+        sendRequestToScene(scene, image: image, title: title, description: description, thumbnailImage: thumbnailImage, tagName: nil, extraMessage: nil, action: nil, completion: completion)
     }
     
     public class func sendRequestToScene(scene: MSRWeChatScene, image: UIImage, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, completion: ((Bool) -> Void)?) {
@@ -68,12 +68,12 @@ extension MSRWeChatScope: Hashable {
         _sendRequestToScene(scene, object: object, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, completion: completion)
     }
     
-    public class func sendRequestToscene(scene: MSRWeChatScene, imageData: NSData, completion: ((Bool) -> Void)?) {
-        return sendRequestToScene(scene, imageData: imageData, title: nil, description: nil, thumbnailImage: nil, completion: completion)
+    public class func sendRequestToScene(scene: MSRWeChatScene, imageData: NSData, completion: ((Bool) -> Void)?) {
+        sendRequestToScene(scene, imageData: imageData, title: nil, description: nil, thumbnailImage: nil, completion: completion)
     }
     
     public class func sendRequestToScene(scene: MSRWeChatScene, imageData: NSData, title: String?, description: String?, thumbnailImage: UIImage?, completion: ((Bool) -> Void)?) {
-        return sendRequestToScene(scene, imageData: imageData, title: title, description: description, thumbnailImage: thumbnailImage, tagName: nil, extraMessage: nil, action: nil, completion: completion)
+        sendRequestToScene(scene, imageData: imageData, title: title, description: description, thumbnailImage: thumbnailImage, tagName: nil, extraMessage: nil, action: nil, completion: completion)
     }
     
     public class func sendRequestToScene(scene: MSRWeChatScene, imageData: NSData, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, completion: ((Bool) -> Void)?) {
@@ -128,8 +128,8 @@ extension MSRWeChatScope: Hashable {
         _sendRequestToScene(scene, object: object, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, completion: completion)
     }
     
-    public class func sendRequestToScene(scene: MSRWeChatScene, applicationDefinedInformations: String, applicationDownloadURL: NSURL?, fileData: NSData?) {
-        sendRequestToScene(scene, applicationDefinedInformations: applicationDefinedInformations, applicationDownloadURL: applicationDownloadURL, fileData: fileData)
+    public class func sendRequestToScene(scene: MSRWeChatScene, applicationDefinedInformations: String, applicationDownloadURL: NSURL?, fileData: NSData?, completion: ((Bool) -> Void)?) {
+        sendRequestToScene(scene, applicationDefinedInformations: applicationDefinedInformations, applicationDownloadURL: applicationDownloadURL, fileData: fileData, title: nil, description: nil, thumbnailImage: nil, completion: completion)
     }
     
     public class func sendRequestToScene(scene: MSRWeChatScene, applicationDefinedInformations: String, applicationDownloadURL: NSURL?, fileData: NSData?, title: String?, description: String?, thumbnailImage: UIImage?, completion: ((Bool) -> Void)?) {
@@ -182,7 +182,7 @@ extension MSRWeChatScope: Hashable {
         .TimeLine: "post_timeline",
         .UserInfo: "snsapi_userinfo"]
     
-    public class func sendAuthorizationRequestWithScope(scope: MSRWeChatScope, openID: String, mark: String?, currentViewController: UIViewController, completion: ((Bool) -> Void)?) {
+    public class func sendAuthorizationRequestWithScope(scope: MSRWeChatScope, openID: String, mark: String?, currentViewController: UIViewController, delegate: MSRWeChatAPIDelegate, completion: ((Bool) -> Void)?) {
         let request = SendAuthReq()
         var first = true
         var scopeString = ""
@@ -198,7 +198,9 @@ extension MSRWeChatScope: Hashable {
         request.scope = scopeString
         request.state = mark
         request.openID = openID
-        completion?(WXApi.sendAuthReq(request, viewController: currentViewController, delegate: _MSRWeChatManager.defaultManager))
+        let manager = _MSRWeChatManager()
+        manager.delegate = delegate
+        completion?(WXApi.sendAuthReq(request, viewController: currentViewController, delegate: manager))
     }
     
     public class func sendCardsAddingRequestWithCards(cards: [MSRWeChatCard],  completion: ((Bool) -> Void)?) {
@@ -214,10 +216,153 @@ extension MSRWeChatScope: Hashable {
         request.cardAry = items
         completion?(WXApi.sendReq(request))
     }
+
+    public class func sendBusinessProfilePresentingRequestWithProfileType(profileType: MSRWeChatProfileType, username: String, extraMessage: String?, completion: ((Bool) -> Void)?) {
+        let request = JumpToBizProfileReq()
+        request.profileType = Int32(profileType.rawValue)
+        request.username = username
+        request.extMsg = extraMessage
+        completion?(WXApi.sendReq(request))
+    }
+    
+    public class func sendBusinessWebviewPresentingRequestWithWebviewType(webviewType: MSRWeChatWebviewType, username: String, extraMessage: String?, completion: ((Bool) -> Void)?) {
+        let request = JumpToBizWebviewReq()
+        request.webType = Int32(webviewType.rawValue)
+        request.tousrname = username
+        request.extMsg = extraMessage
+        completion?(WXApi.sendReq(request))
+    }
+
+    public class func sendResponseWithText(text: String, completion: ((Bool) -> Void)?) {
+        let response = GetMessageFromWXResp()
+        response.text = text
+        response.bText = true
+        completion?(WXApi.sendResp(response))
+    }
+    
+    public class func sendResponseWithImage(image: UIImage, completion: ((Bool) -> Void)?) {
+        sendResponseWithImage(image, title: nil, description: nil, thumbnailImage: nil, completion: completion)
+    }
+    
+    public class func sendResponseWithImage(image: UIImage, title: String?, description: String?, thumbnailImage: UIImage?, completion: ((Bool) -> Void)?) {
+        sendResponseWithImage(image, title: title, description: description, thumbnailImage: thumbnailImage, tagName: nil, extraMessage: nil, action: nil, completion: completion)
+    }
+    
+    public class func sendResponseWithImage(image: UIImage, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, completion: ((Bool) -> Void)?) {
+        let object = WXImageObject()
+        object.imageData = UIImageJPEGRepresentation(image, 1)
+        _sendResponseWithObject(object, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, completion: completion)
+    }
+    
+    public class func sendRequestToWithImageData(imageData: NSData, completion: ((Bool) -> Void)?) {
+        sendResponseWithImageData(imageData, title: nil, description: nil, thumbnailImage: nil, completion: completion)
+    }
+    
+    public class func sendResponseWithImageData(imageData: NSData, title: String?, description: String?, thumbnailImage: UIImage?, completion: ((Bool) -> Void)?) {
+        sendResponseWithImageData(imageData, title: title, description: description, thumbnailImage: thumbnailImage, tagName: nil, extraMessage: nil, action: nil, completion: completion)
+    }
+    
+    public class func sendResponseWithImageData(imageData: NSData, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, completion: ((Bool) -> Void)?) {
+        let object = WXImageObject()
+        object.imageData = imageData
+        _sendResponseWithObject(object, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, completion: completion)
+    }
+    
+    public class func sendResponseWithWebpageURL(webpageURL: NSURL, completion: ((Bool) -> Void)?) {
+        sendResponseWithWebpageURL(webpageURL, title: nil, description: nil, thumbnailImage: nil, completion: completion)
+    }
+    
+    public class func sendResponseWithWebpageURL(webpageURL: NSURL, title: String?, description: String?, thumbnailImage: UIImage?, completion: ((Bool) -> Void)?) {
+        sendResponseWithWebpageURL(webpageURL, title: title, description: description, thumbnailImage: thumbnailImage, tagName: nil, extraMessage: nil, action: nil, completion: completion)
+    }
+    
+    public class func sendResponseWithWebpageURL(webpageURL: NSURL, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, completion: ((Bool) -> Void)?) {
+        let object = WXWebpageObject()
+        object.webpageUrl = webpageURL.absoluteString
+        _sendResponseWithObject(object, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, completion: completion)
+    }
+    
+    public class func sendResponseWithMusicDataURL(musicDataURL: NSURL, lowBandMusicDataURL: NSURL?, musicWebpageURL: NSURL?, lowBandMusicWebPageURL: NSURL?, completion: ((Bool) -> Void)?) {
+        sendResponseWithMusicDataURL(musicDataURL, lowBandMusicDataURL: lowBandMusicDataURL, musicWebpageURL: musicWebpageURL, lowBandMusicWebPageURL: lowBandMusicWebPageURL, title: nil, description: nil, thumbnailImage: nil, completion: completion)
+    }
+    
+    public class func sendResponseWithMusicDataURL(musicDataURL: NSURL, lowBandMusicDataURL: NSURL?, musicWebpageURL: NSURL?, lowBandMusicWebPageURL: NSURL?, title: String?, description: String?, thumbnailImage: UIImage?, completion: ((Bool) -> Void)?) {
+        sendResponseWithMusicDataURL(musicDataURL, lowBandMusicDataURL: lowBandMusicDataURL, musicWebpageURL: musicWebpageURL, lowBandMusicWebPageURL: lowBandMusicWebPageURL, title: title, description: description, thumbnailImage: thumbnailImage, tagName: nil, extraMessage: nil, action: nil, completion: completion)
+    }
+    
+    public class func sendResponseWithMusicDataURL(musicDataURL: NSURL, lowBandMusicDataURL: NSURL?, musicWebpageURL: NSURL?, lowBandMusicWebPageURL: NSURL?, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, completion: ((Bool) -> Void)?) {
+        let object = WXMusicObject()
+        object.musicUrl = musicWebpageURL?.absoluteString
+        object.musicDataUrl = musicDataURL.absoluteString
+        object.musicLowBandDataUrl = lowBandMusicDataURL?.absoluteString
+        object.musicLowBandUrl = lowBandMusicWebPageURL?.absoluteString
+        _sendResponseWithObject(object, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, completion: completion)
+    }
+    
+    public class func sendResponseWithVideoURL(videoURL: NSURL, lowBandVideoURL: NSURL?, completion: ((Bool) -> Void)?) {
+        sendResponseWithVideoURL(videoURL, lowBandVideoURL: lowBandVideoURL, title: nil, description: nil, thumbnailImage: nil, completion: completion)
+    }
+    
+    public class func sendResponseWithVideoURL(videoURL: NSURL, lowBandVideoURL: NSURL?, title: String?, description: String?, thumbnailImage: UIImage?, completion: ((Bool) -> Void)?) {
+        sendResponseWithVideoURL(videoURL, lowBandVideoURL: lowBandVideoURL, title: title, description: description, thumbnailImage: thumbnailImage, tagName: nil, extraMessage: nil, action: nil, completion: completion)
+    }
+    
+    public class func sendResponseWithVideoURL(videoURL: NSURL, lowBandVideoURL: NSURL?, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, completion: ((Bool) -> Void)?) {
+        let object = WXVideoObject()
+        object.videoUrl = videoURL.absoluteString
+        object.videoLowBandUrl = lowBandVideoURL?.absoluteString
+        _sendResponseWithObject(object, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, completion: completion)
+    }
+    
+    public class func sendResponseWithApplicationDefinedInformations(applicationDefinedInformations: String, applicationDownloadURL: NSURL?, fileData: NSData?, completion: ((Bool) -> Void)?) {
+        sendResponseWithApplicationDefinedInformations(applicationDefinedInformations, applicationDownloadURL: applicationDownloadURL, fileData: fileData, title: nil, description: nil, thumbnailImage: nil, completion: completion)
+    }
+    
+    public class func sendResponseWithApplicationDefinedInformations(applicationDefinedInformations: String, applicationDownloadURL: NSURL?, fileData: NSData?, title: String?, description: String?, thumbnailImage: UIImage?, completion: ((Bool) -> Void)?) {
+        sendResponseWithApplicationDeginedInformations(applicationDefinedInformations, applicationDownloadURL: applicationDownloadURL, fileData: fileData, title: title, description: description, thumbnailImage: thumbnailImage, tagName: nil, extraMessage: nil, action: nil, completion: completion)
+    }
+    
+    public class func sendResponseWithApplicationDeginedInformations(applicationDefinedInformations: String, applicationDownloadURL: NSURL?, fileData: NSData?, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, completion: ((Bool) -> Void)?) {
+        let object = WXAppExtendObject()
+        object.url = applicationDownloadURL?.absoluteString
+        object.extInfo = applicationDefinedInformations
+        object.fileData = fileData
+        _sendResponseWithObject(object, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, completion: completion)
+    }
+    
+    public class func sendResponseWithFileData(fileData: NSData, fileExtensionName: String, completion: ((Bool) -> Void)?) {
+        sendResponseWithFileData(fileData, fileExtensionName: fileExtensionName, title: nil, description: nil, thumbnailImage: nil, completion: completion)
+    }
+    
+    public class func sendResponseWithFileData(fileData: NSData, fileExtensionName: String, title: String?, description: String?, thumbnailImage: UIImage?, completion: ((Bool) -> Void)?) {
+        sendResponseWithFileData(fileData, fileExtensionName: fileExtensionName, title: title, description: description, thumbnailImage: thumbnailImage, tagName: nil, extraMessage: nil, action: nil, completion: completion)
+    }
+    
+    public class func sendResponseWithFileData(fileData: NSData, fileExtensionName: String, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, completion: ((Bool) -> Void)?) {
+        let object = WXFileObject()
+        object.fileData = fileData
+        object.fileExtension = fileExtensionName
+        _sendResponseWithObject(object, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, completion: completion)
+    }
+    
+    public class func sendResponseWithEmoticonData(emoticonData: NSData, completion: ((Bool) -> Void)?) {
+        sendResponseWithEmoticonData(emoticonData, title: nil, description: nil, thumbnailImage: nil, completion: completion)
+    }
+    
+    public class func sendResponseWithEmoticonData(emoticonData: NSData, title: String?, description: String?, thumbnailImage: UIImage?, completion: ((Bool) -> Void)?) {
+        sendResponseWithEmoticonData(emoticonData, title: title, description: description, thumbnailImage: thumbnailImage, tagName: nil, extraMessage: nil, action: nil, completion: completion)
+    }
+    
+    public class func sendResponseWithEmoticonData(emoticonData: NSData, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, completion: ((Bool) -> Void)?) {
+        let object = WXEmoticonObject()
+        object.emoticonData = emoticonData
+        _sendResponseWithObject(object, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, completion: completion)
+    }
     
     public class func handleOpenURL(url: NSURL, withDelegate delegate: MSRWeChatAPIDelegate) -> Bool {
-        _MSRWeChatManager.defaultManager.delegate = delegate
-        return WXApi.handleOpenURL(url, delegate: _MSRWeChatManager.defaultManager)
+        let manager = _MSRWeChatManager()
+        manager.delegate = delegate
+        return WXApi.handleOpenURL(url, delegate: manager)
     }
     
     public class func weChatIsInstalled() -> Bool {
@@ -261,10 +406,31 @@ extension MSRWeChatScope: Hashable {
         request.scene = Int32(scene.rawValue)
         completion?(WXApi.sendReq(request))
     }
+    
+    private class func _sendResponseWithObject(object: AnyObject, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, completion: ((Bool) -> Void)?) {
+        let message = WXMediaMessage()
+        message.title = title
+        message.description = description
+        message.setThumbImage(thumbnailImage)
+        message.mediaObject = object
+        message.mediaTagName = tagName
+        let response = GetMessageFromWXResp()
+        response.bText = false
+        response.message = message
+        completion?(WXApi.sendResp(response))
+    }
 
 }
 
 @objc public protocol MSRWeChatAPIDelegate {
+    optional func msr_didReceiveMessageSendingRequestFromWeChat(openID: String)
+    optional func msr_didReceiveImageMessagePresentingRequestFromWeChat(imageData: NSData?, imageURL: NSURL?, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, openID: String, needsResponding: Bool)
+    optional func msr_didReceiveMusicMessagePresentingRequestFromWeChat(musicDataURL: NSURL, lowBandMusicDataURL: NSURL?, musicWebpageURL: NSURL?, lowBandMusicWebPageURL: NSURL?, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, openID: String, needsResponding: Bool)
+    optional func msr_didReceiveVideoMessagePresentingRequestFromWeChat(videoURL: NSURL, lowBandVideoURL: NSURL?, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, openID: String, needsResponding: Bool)
+    optional func msr_didReceiveWebpageMessagePresentingRequestFromWeChat(webpageURL: NSURL, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, openID: String, needsResponding: Bool)
+    optional func msr_didReceiveApplicationDefinedMessagePresentingRequestFromWeChat(applicationDefinedInformations: String, applicationDownloadURL: NSURL?, fileData: NSData?, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, openID: String, needsResponding: Bool)
+    optional func msr_didReceiveEmoticonMessagePresentingRequestFromWeChat(emoticonData: NSData, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, openID: String, needsResponding: Bool)
+    optional func msr_didReceiveFileMessagePresentingRequestFromWeChat(fileData: NSData, fileExtensionName: String, title: String?, description: String?, thumbnailImage: UIImage?, tagName: String?, extraMessage: String?, action: String?, openID: String, needsResponding: Bool)
     optional func msr_didReceiveMessageSendingResponseFromWeChat(errorCode: MSRWeChatErrorCode, errorString: String?)
     optional func msr_didReceiveAuthorizationResponseFromWeChat(errorCode: MSRWeChatErrorCode, errorString: String?, token: String?, mark: String?)
     optional func msr_didReceiveCardsAddingResponseFromWeChat(errorCode: MSRWeChatErrorCode, errorStrong: String?, cards: [MSRWeChatCard]?)
@@ -278,22 +444,55 @@ extension MSRWeChatScope: Hashable {
 
 @objc class _MSRWeChatManager: NSObject, WXApiDelegate {
     
-    static var defaultManager = _MSRWeChatManager()
-    
     var delegate: MSRWeChatAPIDelegate?
     
     func onReq(request: BaseReq!) {
-        print("ON REQUEST ")
-        println(request)
+        let openID = request.openID
         switch request {
-        case let request as GetMessageFromWXReq:
-            // 微信请求App提供内容， 需要app提供内容后使用sendRsp返回
+        case is GetMessageFromWXReq:
+            delegate?.msr_didReceiveMessageSendingRequestFromWeChat?(openID)
             break
-        case let request as ShowMessageFromWXReq:
-            // 显示微信传过来的内容
-            break
-        case let request as LaunchFromWXReq:
-            // 从微信启动App
+        case let x where x is ShowMessageFromWXReq || x is LaunchFromWXReq:
+            var message: WXMediaMessage!
+            if let s = x as? ShowMessageFromWXReq {
+                message = s.message
+            } else {
+                let l = x as! LaunchFromWXReq
+                message = l.message
+            }
+            let title = message.title
+            let description = message.description
+            let thumbnailImage = UIImage(data: message.thumbData)
+            let tagName = message.mediaTagName
+            let extraMessage = message.messageExt
+            let action = message.messageAction
+            let object: AnyObject! = message.mediaObject
+            let needsResponding = x is ShowMessageFromWXReq
+            switch object {
+            case let object as WXImageObject:
+                delegate?.msr_didReceiveImageMessagePresentingRequestFromWeChat?(object.imageData, imageURL: object.imageUrl == nil ? nil : NSURL(string: object.imageUrl), title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, openID: openID, needsResponding: needsResponding)
+                break
+            case let object as WXMusicObject:
+                delegate?.msr_didReceiveMusicMessagePresentingRequestFromWeChat?(NSURL(string: object.musicDataUrl)!, lowBandMusicDataURL: object.musicLowBandDataUrl == nil ? nil : NSURL(string: object.musicLowBandDataUrl), musicWebpageURL: object.musicUrl == nil ? nil : NSURL(string: object.musicUrl), lowBandMusicWebPageURL: object.musicLowBandUrl == nil ? nil : NSURL(string: object.musicLowBandUrl), title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, openID: openID, needsResponding: needsResponding)
+                break
+            case let object as WXVideoObject:
+                delegate?.msr_didReceiveVideoMessagePresentingRequestFromWeChat?(NSURL(string: object.videoUrl)!, lowBandVideoURL: object.videoLowBandUrl == nil ? nil : NSURL(string: object.videoLowBandUrl), title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, openID: openID, needsResponding: needsResponding)
+                break
+            case let object as WXWebpageObject:
+                delegate?.msr_didReceiveWebpageMessagePresentingRequestFromWeChat?(NSURL(string: object.webpageUrl)!, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, openID: openID, needsResponding: needsResponding)
+                break
+            case let object as WXAppExtendObject:
+                delegate?.msr_didReceiveApplicationDefinedMessagePresentingRequestFromWeChat?(object.extInfo, applicationDownloadURL: object.url == nil ? nil : NSURL(string: object.url), fileData: object.fileData, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, openID: openID, needsResponding: needsResponding)
+                break
+            case let object as WXEmoticonObject:
+                delegate?.msr_didReceiveEmoticonMessagePresentingRequestFromWeChat?(object.emoticonData, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, openID: openID, needsResponding: needsResponding)
+                break
+            case let object as WXFileObject:
+                delegate?.msr_didReceiveFileMessagePresentingRequestFromWeChat?(object.fileData, fileExtensionName: object.fileExtension, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, openID: openID, needsResponding: needsResponding)
+                break
+            default:
+                break
+            }
             break
         default:
             break
