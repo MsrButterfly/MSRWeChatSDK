@@ -1,0 +1,5 @@
+module MSRWeChatScope {
+    header "MSRWeChatScope.h"
+    use UIKit
+    export *
+}

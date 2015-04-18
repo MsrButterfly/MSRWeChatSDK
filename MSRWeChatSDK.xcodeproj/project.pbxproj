@@ -52,6 +52,8 @@
 		9507CE221ADCEEA8001E1D33 /* MSRWeChatSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MSRWeChatSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9507CE281ADCEEA8001E1D33 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9507CE291ADCEEA8001E1D33 /* MSRWeChatSDKTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSRWeChatSDKTests.swift; sourceTree = "<group>"; };
+		9527567D1AE25552007D9CF0 /* MSRWeChatScope.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MSRWeChatScope.h; sourceTree = "<group>"; };
+		952756811AE25669007D9CF0 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 		9554D52D1ADD0ABA00C94061 /* MSRWeChatSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSRWeChatSDK.h; sourceTree = "<group>"; };
 		9554D52E1ADD0ABA00C94061 /* MSRWeChatSDK.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = MSRWeChatSDK.xcassets; sourceTree = "<group>"; };
 		9554D5351ADD0B3000C94061 /* MSRWeChatSDK.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MSRWeChatSDK.swift; sourceTree = "<group>"; };
@@ -114,11 +116,13 @@
 		9507CE191ADCEEA7001E1D33 /* MSRWeChatSDK */ = {
 			isa = PBXGroup;
 			children = (
+				952756811AE25669007D9CF0 /* module.modulemap */,
 				9554D55A1ADD2EC300C94061 /* Frameworks */,
 				9554D53E1ADD0E0100C94061 /* OfficialSDK */,
 				9554D52E1ADD0ABA00C94061 /* MSRWeChatSDK.xcassets */,
 				9554D52D1ADD0ABA00C94061 /* MSRWeChatSDK.h */,
 				9554D5351ADD0B3000C94061 /* MSRWeChatSDK.swift */,
+				9527567D1AE25552007D9CF0 /* MSRWeChatScope.h */,
 				9507CE1A1ADCEEA7001E1D33 /* Supporting Files */,
 			);
 			path = MSRWeChatSDK;
@@ -452,7 +456,8 @@
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/MSRWeChatSDK/OfficialSDK";
+				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/MSRWeChatSDK/OfficialSDK $(PROJECT_DIR)/MSRWeChatSDK";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -475,7 +480,8 @@
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/MSRWeChatSDK/OfficialSDK";
+				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/MSRWeChatSDK/OfficialSDK $(PROJECT_DIR)/MSRWeChatSDK";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 			};
 			name = Release;
 		};

@@ -8,6 +8,13 @@
 
 import UIKit
 import WeChatSDK
+import MSRWeChatScope
+
+extension MSRWeChatScope: Hashable {
+    public var hashValue: Int {
+        return rawValue.hashValue
+    }
+}
 
 @objc public enum MSRWeChatErrorCode: Int {
     case Success = 0
@@ -35,22 +42,6 @@ import WeChatSDK
 
 @objc public enum MSRWeChatWebviewType: Int {
     case Ad = 0
-}
-
-@objc public enum MSRWeChatScope: Int {
-    case Base = 0
-    case UserInfo
-    case Friends
-    case Contacts
-    case TimeLine
-    case SNS
-    static let 
-    var string: String {
-        
-    }
-// {
-//        @"snsapi_message,snsapi_userinfo,snsapi_friend,snsapi_contact"; // @"post_timeline,sns"
-// }
 }
 
 @objc public class MSRWeChatAPI: NSObject {
@@ -182,14 +173,46 @@ import WeChatSDK
         _sendRequestToScene(scene, object: object, title: title, description: description, thumbnailImage: thumbnailImage, tagName: tagName, extraMessage: extraMessage, action: action, completion: completion)
     }
     
-    public class func sendAuthorizationRequestWithScope(scope: MSRWeChatScope, mark: String?, currentViewController: UIViewController, completion: ((Bool) -> Void)?) {
+    private static var scopeStrings: [MSRWeChatScope: String] = [
+        .Base: "snsapi_base",
+        .Contacts: "snsapi_contact",
+        .Friends: "snsapi_friend",
+        .Message: "snsapi_message",
+        .SNS: "sns",
+        .TimeLine: "post_timeline",
+        .UserInfo: "snsapi_userinfo"]
+    
+    public class func sendAuthorizationRequestWithScope(scope: MSRWeChatScope, openID: String, mark: String?, currentViewController: UIViewController, completion: ((Bool) -> Void)?) {
         let request = SendAuthReq()
-        let scopes: [MSRWeChatScope: String] = [
-            .SNSAPIBase: "snsapi_base",
-            .SNSAPIUserInfo: "snsapi_userinfo"]
-        request.scope = scopes[scope]!
+        var first = true
+        var scopeString = ""
+        for (k, v) in scopeStrings {
+            if scope & k != nil {
+                if !first {
+                    scopeString += ","
+                }
+                first = false
+                scopeString += v
+            }
+        }
+        request.scope = scopeString
         request.state = mark
+        request.openID = openID
         completion?(WXApi.sendAuthReq(request, viewController: currentViewController, delegate: _MSRWeChatManager.defaultManager))
+    }
+    
+    public class func sendCardsAddingRequestWithCards(cards: [MSRWeChatCard],  completion: ((Bool) -> Void)?) {
+        let request = AddCardToWXCardPackageReq()
+        var items = [WXCardItem]()
+        for card in cards {
+            let item = WXCardItem()
+            item.cardId = card.identifier
+            item.cardState = card.added ? 1 : 0
+            item.extMsg = card.extraMessage
+            items.append(item)
+        }
+        request.cardAry = items
+        completion?(WXApi.sendReq(request))
     }
     
     public class func handleOpenURL(url: NSURL, withDelegate delegate: MSRWeChatAPIDelegate) -> Bool {
