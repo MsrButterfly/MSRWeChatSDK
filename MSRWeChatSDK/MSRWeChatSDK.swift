@@ -437,9 +437,9 @@ extension MSRWeChatScope: Hashable {
 }
 
 @objc public class MSRWeChatCard: NSObject {
-    var identifier: String = ""
-    var extraMessage: String = ""
-    var added: Bool = false
+    public var identifier: String = ""
+    public var extraMessage: String = ""
+    public var added: Bool = false
 }
 
 @objc class _MSRWeChatManager: NSObject, WXApiDelegate {
