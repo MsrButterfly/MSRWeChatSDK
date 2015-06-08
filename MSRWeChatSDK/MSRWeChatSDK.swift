@@ -444,7 +444,7 @@ extension MSRWeChatScope: Hashable {
 
 @objc class _MSRWeChatManager: NSObject, WXApiDelegate {
     
-    var delegate: MSRWeChatAPIDelegate?
+    weak var delegate: MSRWeChatAPIDelegate?
     
     func onReq(request: BaseReq!) {
         let openID = request.openID
