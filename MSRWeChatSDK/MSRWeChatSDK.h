@@ -15,5 +15,3 @@ FOUNDATION_EXPORT double MSRWeChatSDKVersionNumber;
 FOUNDATION_EXPORT const unsigned char MSRWeChatSDKVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <MSRWeChatSDK/PublicHeader.h>
-
-@import MSRWeChatScope;

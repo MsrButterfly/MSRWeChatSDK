@@ -8,7 +8,27 @@
 
 import UIKit
 import WeChatSDK
-import MSRWeChatScope
+
+public struct MSRWeChatScope: RawOptionSetType {
+    
+    public typealias RawValue = UInt
+    public var rawValue: RawValue = 0
+    
+    public init(rawValue value: UInt) { self.rawValue = value }
+    public init(nilLiteral: ()) { self.rawValue = 0 }
+    
+    public static var allZeros: MSRWeChatScope { return self(rawValue: 0) }
+    
+    public static var None: MSRWeChatScope { return self(rawValue: 0) }
+    public static var Base: MSRWeChatScope { return self(rawValue: 1 << 0) }
+    public static var Contacts: MSRWeChatScope { return self(rawValue: 1 << 1) }
+    public static var Friends: MSRWeChatScope { return self(rawValue: 1 << 2) }
+    public static var Message: MSRWeChatScope { return self(rawValue: 1 << 2) }
+    public static var SNS: MSRWeChatScope { return self(rawValue: 1 << 2) }
+    public static var TimeLine: MSRWeChatScope { return self(rawValue: 1 << 2) }
+    public static var UserInfo: MSRWeChatScope { return self(rawValue: 1 << 2) }
+    
+}
 
 extension MSRWeChatScope: Hashable {
     public var hashValue: Int {
